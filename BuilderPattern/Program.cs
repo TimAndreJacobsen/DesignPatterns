@@ -8,55 +8,32 @@ namespace BuilderPattern
     {
         static void Main(string[] args)
         {
-            // The simple example
-            var filterCoffeeBuilder = new CoffeeBuilder();
-
-            filterCoffeeBuilder.SetType("filter");
-            filterCoffeeBuilder.Brew();
-
-            var filterCoffee = filterCoffeeBuilder.Serve();
-            //Console.WriteLine(filterCoffee.Content);
-
-            var espressoCoffeeBuilder = new CoffeeBuilder();
-            espressoCoffeeBuilder.SetType("espresso");
-            espressoCoffeeBuilder.Brew();
-            espressoCoffeeBuilder.AddSugar();
-            espressoCoffeeBuilder.AddMilk();
-
-            var espressoCoffee = espressoCoffeeBuilder.Serve();
-            //Console.WriteLine(espressoCoffee.Content);
-
-            // Now we add in a director, to let us quickly generate "complex" objects.
-            // We pass the builder into the director
+            // Using a builder to instantiate and set parameters on object
+            //
+            // The pattern removes these parameters from the constructor and instead of having:
+            // new Coffee("filter", true, true, true)
+            // We get more readable code.
+            //
+            // Further this could be made fluent and allowing methods to be chained:
+            // new Coffee().SetType("filter").Brew().AddMilk().AddSugar();
             var coffeeBuilder = new CoffeeBuilder();
-            var coffeeBuilderDirector = new CoffeeBuildDirecor(coffeeBuilder);
+            
+            coffeeBuilder.SetType("filter");
+            coffeeBuilder.Brew();
+            coffeeBuilder.AddMilk();
+            coffeeBuilder.AddSugar();
 
-            var espressoOne = coffeeBuilderDirector.MakeEspressoWithMilkAndSugar();
+            Console.WriteLine(coffeeBuilder.Serve());
 
-            Console.WriteLine(espressoOne.Content);
+            // using a director
+            var builder = new CoffeeBuilder();
+            var director = new CoffeeBuildDirecor(builder);
 
-
-
-
-
-
-
-            //// More complex example. Produce cars and generate a report
-            ////Build vehicles and generate report
-            //var items = new List<Vehicle>
-            // {
-            //     new Vehicle("Honda", "Accord", 479000.00, "Diesel"),
-            //     new Vehicle("Mazda", "323", 180000.00, "Gasoline"),
-            //     new Vehicle("Tesla", "Model 3", 600000.00, "Electric"),
-            // };
-
-            //var VehicleBuilder = new DailyReportBuilder(items);
-            //var VehicleBuilderDirector = new VehicleBuildDirector(VehicleBuilder);
-
-            //VehicleBuilderDirector.BuildCompleteReport();
-            //var directorReport = VehicleBuilder.GetDailyReport();
-
-            //Console.WriteLine(directorReport.Debug());
+            var filter = director.MakeFilter();
+            var cappucino = director.MakeCappucino();
+            
+            Console.WriteLine(filter.Serve());
+            Console.WriteLine(cappucino.Serve());
         }
     }
 }

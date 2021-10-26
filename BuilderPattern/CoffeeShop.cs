@@ -9,25 +9,35 @@ namespace BuilderPattern
     public interface ICoffee
     {
         public string Type { get; set; }
-        public string Content { get; set; }
+
+        void Brew();
+        void AddSugar();
+        void AddMilk();
+        string Serve();
     }
 
-    // Concrete implementation
+    // Concrete Types
     public class Filter : ICoffee
     {
+        private readonly StringBuilder _output = new StringBuilder();
         public string Type { get; set; } = "filter";
-        public string Content { get; set; }
 
-
+        public void Brew() => _output.Append($"Brewing a fresh cup of {Type} \n");
+        public void AddSugar() => _output.Append("with a lot sugar \n");
+        public void AddMilk() => _output.Append("and a scoop of milk \n");
+        public string Serve() => _output.ToString();
     }
 
     // Concrete implementation
     public class Espresso : ICoffee
     {
+        private readonly StringBuilder _output = new StringBuilder();
         public string Type { get; set; } = "espresso";
-        public string Content { get; set; }
 
-
+        public void Brew() => _output.Append($"Brewing a fresh cup of {Type} \n");
+        public void AddSugar() => _output.Append("with a little sugar \n");
+        public void AddMilk() => _output.Append("and a splash of milk \n");
+        public string Serve() => _output.ToString();
     }
 
 
@@ -44,7 +54,6 @@ namespace BuilderPattern
     // Concrete builder
     public class CoffeeBuilder : ICoffeeBuilder
     {
-        private readonly StringBuilder _output = new StringBuilder();
         private ICoffee ConcreteCoffee;
 
         public void SetType(string type)
@@ -57,15 +66,12 @@ namespace BuilderPattern
             };
         }
 
-        public void Brew() => _output.Append($"Brewing a fresh cup of {ConcreteCoffee.Type} \n");
-
-        public void AddSugar() => _output.Append("added sugar \n");
-
-        public void AddMilk() => _output.Append("added a splash of milk \n");
+        public void Brew() => ConcreteCoffee.Brew();
+        public void AddSugar() => ConcreteCoffee.AddSugar();
+        public void AddMilk() => ConcreteCoffee.AddMilk();
 
         public ICoffee Serve()
         {
-            ConcreteCoffee.Content = _output.ToString();
             return ConcreteCoffee;
         }
     }
@@ -93,12 +99,12 @@ namespace BuilderPattern
             _builder.Brew();
             return (Espresso)_builder.Serve();
         }
-        public Espresso MakeEspressoWithMilkAndSugar()
+        public Espresso MakeCappucino()
         {
             _builder.SetType("espresso");
+            _builder.Brew();
             _builder.AddMilk();
             _builder.AddSugar();
-            _builder.Brew();
             return (Espresso)_builder.Serve();
         }
     }
