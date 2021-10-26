@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Builder_Pattern
+namespace BuilderPattern
 {
+
+    // Concrete type
     public class Vehicle
     {
         public string Make;
@@ -12,15 +14,16 @@ namespace Builder_Pattern
         public double Price;
         public string FuelType;
 
-        public Vehicle(string make, string model, double price, string FuelType)
+        public Vehicle(string make, string model, double price, string fuelType)
         {
-            this.Make = make;
-            this.Model = model;
-            this.Price = price;
-            this.FuelType = FuelType;
+            Make = make;
+            Model = model;
+            Price = price;
+            FuelType = fuelType;
         }
     }
 
+    // Concrete builder
     public class VehicleSalesReport
     {
         public string Title;
@@ -37,7 +40,8 @@ namespace Builder_Pattern
         }
     }
 
-    public interface IVehicleBuilder
+    // Interface for concrete builder
+    public interface IVehicleReportBuilder
     {
         void AddTitle();
         void AddVehicleDetails();
@@ -46,7 +50,7 @@ namespace Builder_Pattern
         VehicleSalesReport GetDailyReport();
     }
 
-    public class DailyReportBuilder : IVehicleBuilder
+    public class DailyReportBuilder : IVehicleReportBuilder
     {
         private VehicleSalesReport _report;
         private IEnumerable<Vehicle> _items;
@@ -59,7 +63,7 @@ namespace Builder_Pattern
 
         public void AddTitle()
         {
-            _report.Title = "------- Daily Sales Report ------- \n\n";
+            _report.Title = "------- Daily Production Report ------- \n\n";
         }
 
         public void AddVehicleDetails()
@@ -92,9 +96,9 @@ namespace Builder_Pattern
 
     public class VehicleBuildDirector
     {
-        private IVehicleBuilder _builder;
+        private IVehicleReportBuilder _builder;
 
-        public VehicleBuildDirector(IVehicleBuilder concreteBuilder)
+        public VehicleBuildDirector(IVehicleReportBuilder concreteBuilder)
         {
             _builder = concreteBuilder;
         }
